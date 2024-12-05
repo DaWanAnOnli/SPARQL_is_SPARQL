@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2>Runway Details: {{ runway_data.id }}</h2>
+    <table class="table">
+        <tr><th>ID</th><td>{{ runway_data.id }}</td></tr>
+        <tr><th>Airport</th>
+            <td>
+                {% if runway_data.airport %}
+                    <a href="{% url 'airport_details' airport_id=runway_data.airport %}" class="highlighted-cell">
+                        {{ runway_data.airport_label }}
+                    </a>
+                {% else %}
+                    {{ runway_data.airport_label }}
+                {% endif %}
+            </td></tr>
+        <tr><th>Length (ft)</th><td>{{ runway_data.length_ft }}</td></tr>
+        <tr><th>Width (ft)</th><td>{{ runway_data.width_ft }}</td></tr>
+        <tr><th>Surface</th><td>{{ runway_data.surface }}</td></tr>
+        <tr><th>Lighted</th><td>{{ runway_data.lighted }}</td></tr>
+        <tr><th>Closed</th><td>{{ runway_data.closed }}</td></tr>
+        <tr><th>LE Ident</th><td>{{ runway_data.le_ident }}</td></tr>
+    </table>
+</div>
+{% endblock %}

@@ -1,0 +1,61 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-4">
+    <h1>Airport Details - {{ airport_data.name }}</h1>
+
+    <!-- Grouped Cards -->
+    {% for group in airport_info_groups %}
+        <div class="general-info">
+            <div class="category-header">{{ group.category }}</div>
+            {% for field, value, icon in group.items %}
+                <div class="info-item">
+                    <div class="icon">{{ icon }}</div>
+                    <div class="text">
+                        <div class="label">{{ field }}</div>
+                        <div class="value">
+                            {% if value|safe %}
+                                {{ value|safe }}
+                            {% else %}
+                                {{ value }}
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% endfor %}
+
+    <!-- Runways -->
+    <div class="general-info">
+        <div class="category-header">Runways</div>
+        <div class="info-item">
+            {% if airport_data.runway_labels %}
+                <ul>
+                    {% for runway, runway_id in paired_runways %}
+                        <li><a href="{% url 'runway_details' runway_id=runway_id %}" class="highlighted-cell">{{ runway }}</a></li>
+                    {% endfor %}
+                </ul>
+            {% else %}
+                <p>No runways listed.</p>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Navaids -->
+    <div class="general-info">
+        <div class="category-header">Navaids</div>
+        <div class="info-item">
+            {% if airport_data.navaid_labels %}
+                <ul>
+                    {% for navaid_label, navaid_id, navaid_ident in tripled_navaids %}
+                        <li><a href="{% url 'navaid_details' navaid_id=navaid_id %}" class="highlighted-cell">{{ navaid_label }} - {{ navaid_ident }}</a></li>
+                    {% endfor %}
+                </ul>
+            {% else %}
+                <p>No navaids listed.</p>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

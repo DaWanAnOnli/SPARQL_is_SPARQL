@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2 class="mb-4 text-white">Countries</h2>
+
+    <!-- Filter Form -->
+    <form method="get" class="form-inline mb-3">
+        <label for="sortBy" class="mr-2 text-white">Sort by:</label>
+        <select id="sortBy" name="sort" class="form-control mr-2" onchange="goToPage1(this.form)">
+            <option value="default" {% if sort_by == "default" %}selected{% endif %}>Default (Unsorted)</option>
+            <option value="label_asc" {% if sort_by == "label_asc" %}selected{% endif %}>Country Name (A-Z)</option>
+            <option value="label_desc" {% if sort_by == "label_desc" %}selected{% endif %}>Country Name (Z-A)</option>
+        </select>
+    </form>
+
+    <!-- Floating Stack Countries List -->
+    <div class="floating-stack">
+        <dl>
+            {% for letter, countries in alphabetized_countries.items %}
+                <dt>{{ letter }}</dt>
+                {% for country in countries %}
+                    <dd>
+                        <a href="{% url 'country_details' iso_country=country.code %}" class="country-link">
+                            {{ country.label }}
+                        </a>
+                    </dd>
+                {% endfor %}
+            {% endfor %}
+        </dl>
+    </div>
+</div>
+
+<script>
+    function goToPage1(form) {
+        const input = document.createElement('input');
+        input.type = 'hidden';
+        input.name = 'country_page';
+        input.value = '1';
+        form.appendChild(input);
+        form.submit();
+    }
+</script>
+{% endblock %}

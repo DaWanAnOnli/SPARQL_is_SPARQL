@@ -1,0 +1,763 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ page.title }}</title>
+    
+    <!-- Bootstrap CSS -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    
+    <!-- FontAwesome for icons -->
+    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet">
+
+    <!-- Custom CSS -->
+    <link href="{% static 'css/styles.css' %}" rel="stylesheet">
+
+    <style>
+        /* Search Box Styling (jangan pernah diganti) */
+        .search-box {
+            width: fit-content;
+            height: fit-content;
+            position: relative;
+            margin: 0 auto;
+        }
+        .input-search {
+            height: 50px;
+            width: 50px;
+            border-style: none;
+            padding: 10px;
+            font-size: 18px;
+            letter-spacing: 2px;
+            outline: none;
+            border-radius: 25px;
+            transition: all 0.5s ease-in-out;
+            background-color: #1e1e1e;
+            padding-right: 40px;
+            color: rgba(255, 255, 255, 0.5);
+        }
+        .input-search::placeholder {
+            color: rgba(255, 255, 255, 0.5);
+            font-size: 18px;
+            letter-spacing: 2px;
+            font-weight: 100;
+        }
+        .btn-search {
+            width: 50px; /* Increased width */
+            height: 50px; /* Increased height */
+            border-style: none;
+            font-size: 20px;
+            font-weight: bold;
+            outline: none;
+            cursor: pointer;
+            border-radius: 50%;
+            position: absolute;
+            right: 0px;
+            color: #a0a0a0;
+            background-color: transparent;
+        }
+        .input-search:focus {
+            width: 300px;
+            border-radius: 0px;
+            background-color: transparent;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.5);
+            transition: all 500ms cubic-bezier(0, 0.110, 0.35, 2);
+        }
+        /*  */
+
+        .large-search-box .input-search {
+            height: 70px; /* Increased height */
+            width: 70px; /* Increased width */
+            border-style: none;
+            padding: 15px; /* Increased padding */
+            font-size: 24px; /* Increased font size */
+            letter-spacing: 2px;
+            outline: none;
+            border-radius: 35px; /* Adjusted border radius */
+            transition: all 0.5s ease-in-out;
+            background-color: #1e1e1e;
+            padding-right: 50px; /* Adjusted padding-right */
+            color: rgba(255, 255, 255, 0.5);
+        }
+        .large-search-box .input-search::placeholder {
+            color: rgba(255, 255, 255, 0.5);
+            font-size: 24px; /* Increased font size */
+            letter-spacing: 2px;
+            font-weight: 100;
+        }
+        .large-search-box .btn-search {
+            width: 70px; /* Increased width */
+            height: 70px; /* Increased height */
+            border-style: none;
+            font-size: 24px; /* Increased font size */
+            font-weight: bold;
+            outline: none;
+            cursor: pointer;
+            border-radius: 50%;
+            position: absolute;
+            right: 0px;
+            color: #a0a0a0;
+            background-color: transparent;
+        }
+        .large-search-box .input-search:focus {
+            width: 400px; /* Increased width */
+            border-radius: 0px;
+            background-color: transparent;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.5);
+            transition: all 500ms cubic-bezier(0, 0.110, 0.35, 2);
+        }
+        
+        /* Navbar Styling */
+        .navbar {
+            background-color: #1e1e1e; /* Dark gray */
+        }
+
+        .navbar-brand {
+            font-weight: bold;
+            color: #e0e0e0 !important;
+        }
+
+        .navbar-nav .nav-link {
+            font-size: 16px;
+            padding: 8px 15px;
+            color: #e0e0e0 !important;
+            transition: color 0.3s ease;
+            position: relative;
+        }
+
+        .navbar-nav .nav-link:after {
+            content: '';
+            position: absolute;
+            left: 0;
+            bottom: 0;
+            height: 2px;
+            width: 0%;
+            background: #1e1e1e; /* Start with the background color */
+            transition: width 0.3s ease;
+        }
+
+        .navbar-nav .nav-link:hover:after {
+            animation: underline-color 0.6s ease forwards; /* Trigger animation */
+            width: 100%; /* Expand the underline */
+        }
+
+        /* Keyframes for the color change */
+        @keyframes underline-color {
+            0% {
+                background: #1e1e1e; /* Original background */
+            }
+            50% {
+                background: #b3b3b3; /* Highlighted color */
+            }
+            100% {
+                background: #1e1e1e; /* Transition back to the original */
+            }
+        }
+
+        .navbar-nav .nav-link:hover {
+            color: #b3b3b3 !important; 
+        }
+
+        .navbar-nav .nav-link:hover:after {
+            width: 100%; /* Underline expands fully */
+        }
+
+        /* Body Styling */
+        body {
+            background-color: #1e1e1e; /* Dark gray */
+            color: #e0e0e0;
+            font-family: 'Comic Sans', sans-serif;
+        }
+
+        /* Floating Stack Styling */
+        .floating-stack {
+            background: #1e1e1e; /* Matches body color */
+            color: #e0e0e0;
+            height: 400px;
+            max-width: 100%;
+            border-radius: 10px;
+            overflow-y: auto;
+            padding: 1rem;
+            box-shadow: none; /* Removed shadow outline */
+            scrollbar-width: none; /* For Firefox */
+            -ms-overflow-style: none; /* For Internet Explorer */
+        }
+
+        .floating-stack::-webkit-scrollbar {
+            display: none; /* Hide scrollbar for Webkit-based browsers */
+        }
+
+        .floating-stack > dl {
+            margin: 0;
+            display: grid;
+            grid-template-columns: 2.5rem 1fr;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .floating-stack dt {
+            position: sticky;
+            top: 0.5rem;
+            left: 0.5rem;
+            font-weight: bold;
+            background: #333; /* Slightly darker gray */
+            color: #fff;
+            height: 2rem;
+            width: 2rem;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .floating-stack dd {
+            margin: 0;
+            padding: 0.75rem;
+            grid-column: 2;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        /* Country Links Styling */
+        .floating-stack dd a {
+            color: rgba(255, 255, 255, 0.6); /* Light gray */
+            text-decoration: none;
+            display: inline-block;
+            position: relative;
+            transition: color 0.3s ease;
+        }
+
+        /* Left-to-Right Underline Effect */
+        .floating-stack dd a:after {
+            content: '';
+            position: absolute;
+            left: 0;
+            bottom: 0;
+            height: 2px;
+            width: 0%;
+            background: #f1c40f; /* Golden yellow underline */
+            transition: width 0.3s ease;
+        }
+
+        .floating-stack dd a:hover {
+            color: #f1c40f; /* Text turns golden yellow on hover */
+        }
+
+        .floating-stack dd a:hover:after {
+            width: 100%; /* Underline expands from left to right */
+        }
+
+        /* Filter Form Styling */
+        .form-inline label {
+            color: #e0e0e0; /* Matches the theme */
+        }
+
+        select.form-control {
+            background: #333; /* Matches dark theme */
+            color: #e0e0e0;
+            border: 1px solid #444;
+            border-radius: 5px;
+            transition: all 0.3s ease;
+        }
+
+        select.form-control:hover,
+        select.form-control:focus {
+            border-color: #f1c40f; /* Golden highlight */
+            background: #444;
+            color: #fff;
+        }
+
+
+
+
+    /* Styling for country text */
+    .country-text {
+        color: #e0e0e0; /* Neutral text color for country */
+        font-weight: normal; /* Distinctive styling */
+        text-decoration: none; /* No underline */
+        cursor: default; /* Prevent pointer cursor */
+    }
+
+    .country-text:hover {
+        color: #e0e0e0; /* Ensure no hover effect */
+    }
+
+    /* Styling for hover effect on airport links */
+    .link-hover-effect-airports {
+        color: #b3b3b3; /* Initial color */
+        text-decoration: none;
+        position: relative;
+        transition: color 0.3s ease, background-color 0.3s ease;
+    }
+
+    .link-hover-effect-airports:hover {
+        color: #f1c40f; /* Yellow color on hover */
+        text-decoration: none; /* Ensures no underline */
+    }
+
+    .link-hover-effect-airports:after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 0;
+        height: 2px;
+        background: #f1c40f; /* Yellow underline */
+        transition: width 0.3s ease;
+    }
+
+    .link-hover-effect-airports:hover:after {
+        width: 100%; /* Expands the underline */
+    }
+
+    /* Styling the scrollbar for dropdown */
+    .custom-select {
+        background-color: #1e1e1e;
+        color: #e0e0e0;
+        border: 1px solid #444;
+        border-radius: 5px;
+        transition: background-color 0.3s ease, color 0.3s ease;
+        scrollbar-width: thin; /* For Firefox */
+        scrollbar-color: #888 transparent; /* Grey thumb, no track */
+    }
+
+    .custom-select::-webkit-scrollbar {
+        width: 8px; /* Thin scrollbar */
+    }
+
+    .custom-select::-webkit-scrollbar-thumb {
+        background-color: #888; /* Grey thumb */
+        border-radius: 10px; /* Rounded edges */
+    }
+
+    .custom-select::-webkit-scrollbar-thumb:hover {
+        background-color: #555; /* Darker grey on hover */
+    }
+
+    .custom-select::-webkit-scrollbar-track {
+        background: transparent; /* No background for track */
+    }
+
+    /* Focus effect for dropdown */
+    .custom-select:focus {
+        background-color: #f1f1f1;
+        color: #1e1e1e;
+    }
+
+    /* General Table Styling */
+    .table {
+        background-color: #1e1e1e; /* Match the page background */
+        color: #e0e0e0; /* Text color */
+        border-collapse: collapse; /* Merge borders */
+        width: 100%; /* Full width */
+        margin: 20px 0; /* Add spacing */
+    }
+
+    .table thead th {
+        background-color: #1e1e1e; /* Header background matches table */
+        color: #fff; /* Header text color */
+        padding: 12px; /* Spacing for header */
+        text-align: left; /* Align text to the left */
+        border-bottom: 2px solid #333; /* Subtle border for header */
+    }
+
+    .table tbody td {
+        padding: 12px; /* Spacing for cells */
+        text-align: left; /* Align text to the left */
+        border-top: none; /* Remove row borders */
+    }
+
+    /* Pagination Styling */
+    .pagination {
+        margin: 20px 0; /* Spacing around paginator */
+        display: flex;
+        justify-content: center; /* Center-align the paginator */
+        align-items: center;
+        gap: 10px; /* Space between elements */
+    }
+
+    .pagination a {
+        color: #f1c40f; /* Yellow text */
+        text-decoration: none; /* No underline */
+        padding: 8px 16px; /* Add padding */
+        border: 1px solid #f1c40f; /* Yellow border */
+        border-radius: 4px; /* Rounded corners */
+        transition: background-color 0.3s ease, color 0.3s ease;
+    }
+
+    .pagination a:hover {
+        background-color: #f1c40f; /* Yellow background */
+        color: #1e1e1e; /* Dark text */
+    }
+
+    .pagination span {
+        color: #e0e0e0; /* Neutral color for page info */
+        font-size: 14px; /* Smaller text */
+    }
+
+    /* Styling for Tabs */
+    .nav-tabs .nav-link {
+        color: #b3b3b3; /* Neutral color */
+        background-color: #1e1e1e; /* Tab background matches theme */
+        border: 1px solid #333; /* Subtle border */
+        border-radius: 0; /* Remove rounded corners */
+        transition: color 0.3s ease, background-color 0.3s ease;
+    }
+
+    .nav-tabs .nav-link.active {
+        color: #fff; /* Active tab text color */
+        background-color: #333; /* Active tab background */
+        border-bottom: none; /* Merge active tab with content */
+        }
+
+    .nav-tabs .nav-link:hover {
+        color: #f1c40f; /* Highlight text on hover */
+        background-color: #444; /* Subtle background highlight */
+    }
+
+        /* General Information Section */
+        .general-info {
+            background-color: #1e1e1e; /* Match the dark theme */
+            color: #e0e0e0; /* Text color */
+            padding: 20px;
+            border-radius: 10px; /* Rounded corners */
+            margin-bottom: 20px; /* Space between cards */
+            border: 1px solid #333; /* Subtle border */
+        }
+
+        .general-info .category-header {
+            font-size: 18px;
+            font-weight: bold;
+            color: #f1c40f; /* Highlight for category headers */
+            margin-bottom: 10px;
+            border-bottom: 1px solid #333; /* Separator line */
+            padding-bottom: 5px;
+        }
+
+        .general-info .info-item {
+            display: flex; /* Flexbox for icon and text alignment */
+            align-items: center;
+            padding: 10px 0; /* Space between items */
+        }
+
+        .general-info .info-item:not(:last-child) {
+            border-bottom: 1px solid #333; /* Divider line */
+        }
+
+        .general-info .icon {
+            flex-shrink: 0; /* Prevent icon from shrinking */
+            width: 40px;
+            height: 40px;
+            background-color: #333; /* Icon background */
+            color: #f1c40f; /* Icon color */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border-radius: 50%; /* Circular icon */
+            margin-right: 15px; /* Space between icon and text */
+            font-size: 20px; /* Icon size */
+        }
+
+        .general-info .text {
+            flex-grow: 1; /* Text takes up remaining space */
+        }
+
+        .general-info .text .label {
+            font-weight: bold; /* Label styling */
+            margin-bottom: 5px;
+        }
+
+        .general-info .text .value {
+            color: #b3b3b3; /* Subtle color for value */
+        }
+
+        .highlighted-cell {
+            color: #f1c40f; /* Highlighted link color */
+            text-decoration: none;
+        }
+
+        .highlighted-cell:hover {
+            text-decoration: underline; /* Underline on hover */
+        }
+
+        /* Styling for navigation tabs */
+        /* Remove white outline from active and focused tabs */
+        .nav-tabs .nav-link:focus,
+        .nav-tabs .nav-link.active {
+            outline: none; /* Remove the default focus outline */
+            box-shadow: none; /* Remove the focus box-shadow */
+        }
+
+        /* Styling for navigation tabs */
+        .nav-tabs .nav-link {
+            color: #b3b3b3; /* Initial gray color */
+            text-decoration: none;
+            position: relative;
+            transition: color 0.3s ease;
+        }
+
+        /* Hover effect for navigation tabs */
+        .nav-tabs .nav-link:hover {
+            color: #f1c40f; /* Yellow color on hover */
+        }
+
+        /* Underline animation */
+        .nav-tabs .nav-link:after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: #f1c40f; /* Yellow underline */
+            transition: width 0.3s ease;
+        }
+
+        /* Expand underline on hover */
+        .nav-tabs .nav-link:hover:after {
+            width: 100%;
+        }
+
+        /* Disabled tabs styling */
+        .nav-tabs .nav-link.disabled {
+            pointer-events: none;
+            color: #6c757d; /* Lighter gray for disabled tabs */
+            background-color: transparent;
+        }
+
+
+
+
+        
+    </style>
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="/">WorldTraCe</a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation" style="color: rgb(170, 170, 170);">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav mr-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'all_countries' %}?country_page=1&sort=default&items_per_page=10">
+                            Countries
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'all_airports' %}?airport_page=1&sort=default&items_per_page=10">
+                            Airports
+                        </a>
+                    </li>
+                    
+
+                        </div>
+                    </li>
+
+                </ul>
+
+                <!-- Search Bar -->
+                <div id="searchNav"></div>
+                
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content Area -->
+    <div class="container mt-4">
+        <div class="row">
+            {% block content %}
+                <!-- Page-specific content will be inserted here -->
+            {% endblock %}
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer text-center py-3">
+        <div class="container">
+            <span>Powered by Pain & Depression | WorldTraCe</span>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script>
+        window.onload = function() {
+            noQuery();
+            handlePageChange();
+        }
+
+
+        function noQuery() {
+            const url = window.location;
+            const urlParams = new URLSearchParams(url.search);
+            var isExist = "{{ exist|escapejs }}";
+
+            // Check if there is a query or if we are at the root path
+            if (url.pathname === '/' && !urlParams.has('query')) {
+                // Hide elements for no query
+                document.getElementById('resultsTabs').setAttribute('style', 'display: none; visibility: hidden;');
+                document.getElementById('resultsTabContent').setAttribute('style', 'display: none; visibility: hidden;');
+                document.getElementById('a').setAttribute('style', 'display: none;');
+                document.getElementById('b').setAttribute('style', 'display: none;');
+                document.getElementById('searchNoQuery').innerHTML = `
+                    <form class="form-inline" method="get" action="{% url 'results_view' %}" id="searchForm">
+                        <div class="search-box large-search-box" style="display: flex; justify-content: center; margin-bottom: 20px;">
+                            <button class="btn-search" type="button" onclick="handleSearchClick()"><i class="fa fa-search"></i></button>
+                            <input type="text" class="input-search" placeholder="Type to Search..." name="query" id="searchInput" value="{{ request.GET.query }}">
+                        </div>
+                    </form>
+                `;
+                expandSearch();
+                document.getElementById('searchNoQuery').setAttribute('style', 'display: flex; justify-content: center; align-items: center; height: 70vh; font-size: 3rem;');
+            } else {
+                // Show elements for results
+                document.getElementById('searchNav').innerHTML = `
+                    <form class="form-inline" method="get" action="{% url 'results_view' %}" id="searchForm">
+                        <div class="search-box" style="display: flex; justify-content: center; margin-bottom: 20px;">
+                            <button class="btn-search" type="button" onclick="handleSearchClick()"><i class="fa fa-search"></i></button>
+                            <input type="text" class="input-search" placeholder="Type to Search..." name="query" id="searchInput" value="{{ request.GET.query }}">
+                        </div>
+                    </form>
+                `;
+                if (url.pathname == '/'){
+                    console.log(isExist);
+                    if (isExist === 'True') { // condition when query contains results
+                        document.getElementById('resultsTabs').setAttribute('style', 'display: block;');
+                        document.getElementById('resultsTabContent').setAttribute('style', 'display: block;');
+                        document.getElementById('a').setAttribute('style', 'display: block;');
+                        document.getElementById('b').setAttribute('style', 'display: block;');
+                        // Render the tabs dynamically
+                        const tabsHtml = `
+                            <ul class="nav nav-tabs" id="resultsTabs" role="tablist">
+                                {% for tab, count in sorted_tabs %}
+                                    <li class="nav-item">
+                                        <a class="nav-link {% if forloop.first %}active{% endif %} {% if count == 0 %}disabled{% endif %}" 
+                                        id="{{ tab|lower }}-tab" 
+                                        data-toggle="tab" 
+                                        href="#{{ tab|lower }}" 
+                                        role="tab" 
+                                        aria-controls="{{ tab|lower }}" 
+                                        aria-selected="{{ forloop.first }}">
+                                            {{ tab }} 
+                                            <span class="badge badge-primary">{{ count }}</span>
+                                        </a>
+                                    </li>
+                                {% endfor %}
+                            </ul>
+                        `;
+                        document.getElementById('resultsTabs').innerHTML = tabsHtml;
+                
+                        // Render the tab content dynamically
+                        const tabsContentHtml = `
+                            {% for tab, count in sorted_tabs %}
+                                <div class="tab-pane fade {% if forloop.first %}show active{% endif %}" 
+                                    id="{{ tab|lower }}" 
+                                    role="tabpanel" 
+                                    aria-labelledby="{{ tab|lower }}-tab">
+                                    {% if tab == "Airports" %}
+                                        {% include 'partials/search_tab.html' with data=paginated_airports pagination_range=airport_pagination_range sort_by=sort_by tab_name="Airports" %}
+                                    {% elif tab == "Regions" %}
+                                        {% include 'partials/search_tab.html' with data=paginated_regions pagination_range=region_pagination_range sort_by=sort_by tab_name="Regions" %}
+                                    {% elif tab == "Navaids" %}
+                                        {% include 'partials/search_tab.html' with data=paginated_navaids pagination_range=navaid_pagination_range sort_by=sort_by tab_name="Navaids" %}
+                                    {% elif tab == "Runways" %}
+                                        {% include 'partials/search_tab.html' with data=paginated_runways pagination_range=runway_pagination_range sort_by=sort_by tab_name="Runways" %}
+                                    {% elif tab == "Countries" %}
+                                        {% include 'partials/search_tab.html' with data=paginated_countries pagination_range=country_pagination_range sort_by=sort_by tab_name="Countries" %}
+                                    {% else %}
+                                        <p>No results available for {{ tab }}.</p>
+                                    {% endif %}
+                                </div>
+                            {% endfor %}
+                            `;
+                            isExpanded = false;
+                            document.getElementById('searchNoQuery').removeAttribute('style');
+                        document.getElementById('resultsTabContent').innerHTML = tabsContentHtml;
+                        
+                    } else {
+                        document.getElementById('searchNoQuery').innerHTML = `
+                            <h2>{{ message }}</h2>
+                        `;
+                        document.getElementById('searchNoQuery').setAttribute('style', 'display: flex; justify-content: center; align-items: center; height: 50vh; font-size: 3rem;');
+                    }
+                    // Adjust search bar in navbar
+                }
+            }
+        }
+
+    
+        function handleSearchClick() {
+            const searchInput = document.getElementById('searchInput');
+            
+            if (!isExpanded) {
+                // If the search bar is not expanded, expand it
+                expandSearch();
+            } else {
+                // If the search bar is expanded, submit the form if the input has text
+                if (searchInput.value.trim() !== "") {
+                    // Submit the form with the search query
+                    document.getElementById('searchForm').submit();
+                } else {
+                    // If the input is empty, show an alert or handle the case as needed
+                    alert('Please enter a search term before submitting.');
+                }
+            }
+        }
+    
+        function expandSearch() {
+            const searchInput = document.getElementById('searchInput');
+            
+            // Expand the search input field
+            searchInput.focus();
+            searchInput.style.width = '300px';
+            searchInput.style.transition = 'all 0.5s ease-in-out';
+            isExpanded = true;
+        }
+    
+        // Minimize search bar when clicking outside
+        document.addEventListener('click', (event) => {
+            const searchBox = document.querySelector('.search-box');
+            const searchInput = document.getElementById('searchInput');
+    
+            // Check if the click is outside the search box
+            if (!searchBox.contains(event.target)) {
+                // Minimize the search bar
+                searchInput.style.width = '50px';
+                searchInput.style.transition = 'all 0.5s ease-in-out';
+                isExpanded = false;
+            }
+        });
+    </script>
+
+    <script>
+        function handlePageChange() {
+            const urlParams = new URLSearchParams(window.location.search);
+            if (urlParams.has('airports_page')) {
+                const tab = document.getElementById('airports-tab');
+                tab.click();
+            } else if (urlParams.has('navaids_page')) {
+                const tab = document.getElementById('navaids-tab');
+                tab.click();
+            } else if (urlParams.has('regions_page')) {
+                const tab = document.getElementById('regions-tab');
+                tab.click();
+            } else if (urlParams.has('countries_page')) {
+                const tab = document.getElementById('countries-tab');
+                tab.click();
+            } else if (urlParams.has('runways_page')) {
+                const tab = document.getElementById('runways-tab');
+                tab.click();
+            }
+        }
+    </script>
+    
+    
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.0/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>

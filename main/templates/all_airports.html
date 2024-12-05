@@ -1,0 +1,90 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2 class="mb-4">Airports</h2>
+
+    <!-- Filter and Sort Form -->
+    <form method="get" class="form-inline mb-4">
+        <!-- Country Filter -->
+        <label for="countryFilter" class="mr-2">Filter by Country:</label>
+        <select id="countryFilter" name="country" class="form-control custom-select mr-2" onchange="this.form.submit()">
+            <option value="">-- All Countries --</option>
+            {% for country in countries %}
+                <option value="{{ country }}" {% if country == selected_country %}selected{% endif %}>
+                    {{ country }}
+                </option>
+            {% endfor %}
+        </select>
+
+        <!-- Sort By -->
+        <label for="sortBy" class="ml-4 mr-2">Sort by:</label>
+        <select id="sortBy" name="sort" class="form-control custom-select mr-2" onchange="this.form.submit()">
+            <option value="default" {% if sort_by == "default" %}selected{% endif %}>Default (Unsorted)</option>
+            <option value="label_asc" {% if sort_by == "label_asc" %}selected{% endif %}>Airport Name (A-Z)</option>
+            <option value="label_desc" {% if sort_by == "label_desc" %}selected{% endif %}>Airport Name (Z-A)</option>
+            <option value="country_asc" {% if sort_by == "country_asc" %}selected{% endif %}>Country (A-Z)</option>
+            <option value="country_desc" {% if sort_by == "country_desc" %}selected{% endif %}>Country (Z-A)</option>
+        </select>
+    </form>
+
+    <!-- Results Info -->
+    <p class="text-muted">
+        Showing {{ airports_page.start_index }} to {{ airports_page.end_index }} of {{ airports_page.paginator.count }} airports.
+    </p>
+
+    <!-- Airport Data Table -->
+    <table class="table table-striped table-hover">
+        <thead class="thead-light">
+            <tr>
+                {% if sort_by == "country_asc" or sort_by == "country_desc" %}
+                    <th>Country</th>
+                    <th>Airport Name</th>
+                {% else %}
+                    <th>Airport Name</th>
+                    <th>Country</th>
+                {% endif %}
+            </tr>
+        </thead>
+        <tbody>
+            {% for airport in airports_page %}
+                <tr>
+                    {% if sort_by == "country_asc" or sort_by == "country_desc" %}
+                        <td class="country-text">{{ airport.country }}</td>
+                        <td>
+                            <a href="{% url 'airport_details' airport_id=airport.id %}" class="link-hover-effect-airports">
+                                {{ airport.label }}
+                            </a>
+                        </td>
+                    {% else %}
+                        <td>
+                            <a href="{% url 'airport_details' airport_id=airport.id %}" class="link-hover-effect-airports">
+                                {{ airport.label }}
+                            </a>
+                        </td>
+                        <td class="country-text">{{ airport.country }}</td>
+                    {% endif %}
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    
+    <div class="pagination d-flex justify-content-between align-items-center">
+        <div>
+            {% if airports_page.has_previous %}
+            <a href="?page={{ airports_page.previous_page_number }}&items_per_page={{ items_per_page }}&country={{ selected_country }}&sort={{ sort_by }}" class="btn btn-outline-primary">
+                &laquo; Previous
+            </a>
+            {% endif %}
+        </div>
+        <span>Page {{ airports_page.number }} of {{ airports_page.paginator.num_pages }}</span>
+        <div>
+            {% if airports_page.has_next %}
+            <a href="?page={{ airports_page.next_page_number }}&items_per_page={{ items_per_page }}&country={{ selected_country }}&sort={{ sort_by }}" class="btn btn-outline-primary">
+                Next &raquo;
+            </a>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

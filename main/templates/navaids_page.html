@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2>Navaid Details: {{ navaid_data.name }}</h2>
+    <table class="table">
+        <tr><th>ID</th><td>{{ navaid_data.id }}</td></tr>
+        <tr><th>Ident</th><td>{{ navaid_data.ident }}</td></tr>
+        <tr><th>Name</th><td>{{ navaid_data.name }}</td></tr>
+        <tr><th>Type</th><td>{{ navaid_data.type }}</td></tr>
+        <tr><th>Frequency (kHz)</th><td>{{ navaid_data.frequency_khz }}</td></tr>
+        <tr><th>Latitude (deg)</th><td>{{ navaid_data.latitude_deg }}</td></tr>
+        <tr><th>Longitude (deg)</th><td>{{ navaid_data.longitude_deg }}</td></tr>
+        <tr><th>Elevation (ft)</th><td>{{ navaid_data.elevation_ft }}</td></tr>
+        <tr><th>Iso Country</th>
+            <td>
+                {% if navaid_data.iso_country %}
+                <a href="{% url 'country_details' iso_country=navaid_data.iso_country %}" class="highlighted-cell">
+                    {{ navaid_data.iso_country }}
+                </a>
+                {% else %}
+                    {{ navaid_data.iso_country }}
+                {% endif %}
+            </td></tr>
+        <tr><th>Magnetic Variation (deg)</th><td>{{ navaid_data.magnetic_variation_deg }}</td></tr>
+        <tr><th>Usage Type</th><td>{{ navaid_data.usageType }}</td></tr>
+        <tr><th>Power</th><td>{{ navaid_data.power }}</td></tr>
+        <tr><th>Associated Airport</th>
+            <td>
+                {% if navaid_data.associated_airport %}
+                    <a href="{% url 'airport_details' airport_id=navaid_data.associated_airport %}" class="highlighted-cell">
+                        {{ navaid_data.airport_label }}
+                    </a>
+                {% else %}
+                    {{ navaid_data.airport_label }}
+                {% endif %}
+            </td></tr>
+    </table>
+</div>
+{% endblock %}

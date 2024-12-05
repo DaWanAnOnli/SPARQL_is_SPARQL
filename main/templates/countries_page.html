@@ -1,0 +1,190 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2 class="mb-4">Country Details: {{ country_data.name }}</h2>
+
+    {% if flag_url %}
+        <div class="mb-3">
+            <img src="{{ flag_url }}" alt="Flag" style="width:200px;height:auto;">
+        </div>
+    {% else %}
+        <p>No flag found for {{ country_data.name }}.</p>
+        <img src="https://cdn.discordapp.com/attachments/1290524318618357760/1313567835984887860/IMG_20241204_010917.jpg?ex=67509ae1&is=674f4961&hm=d78c21df53aa883101ecadbdf5a2ca9a6785b9aa3f945286fe314aa4006a7558&" 
+            alt="Default flag image for {{ country_data.name }}" 
+            style="width: 150px; height: auto;">
+    {% endif %}
+
+    <!-- General Information -->
+    <div class="tab-pane fade show active" id="general" role="tabpanel" aria-labelledby="general-tab">
+        {% for group in general_info_groups %}
+            <div class="general-info">
+                <div class="category-header">{{ group.category }}</div>
+                {% for field, value, icon in group.items %}
+                    <div class="info-item">
+                        <div class="icon">{{ icon }}</div>
+                        <div class="text">
+                            <div class="label">{{ field }}</div>
+                            <div class="value">{{ value }}</div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        {% endfor %}
+    </div>
+
+    <!-- Tab Navigation -->
+    <ul class="nav nav-tabs mt-4" id="countryTabs" role="tablist">
+        <li class="nav-item">
+            <a class="nav-link active" id="airports-tab" data-toggle="tab" href="#airports" role="tab" aria-controls="airports" aria-selected="true">
+                Airports
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" id="regions-tab" data-toggle="tab" href="#regions" role="tab" aria-controls="regions" aria-selected="false">
+                Regions
+            </a>
+        </li>
+    </ul>
+
+    <!-- Tab Content -->
+    <div class="tab-content mt-4">
+        <!-- Airports Tab -->
+        <div class="tab-pane fade show active" id="airports" role="tabpanel" aria-labelledby="airports-tab">
+            <h4>Airports</h4>
+            <form method="get" class="form-inline mb-4">
+                <label for="airportSort">Sort by:</label>
+                <select id="airportSort" name="airport_sort" class="form-control custom-select mr-2" onchange="this.form.submit()">
+                    <option value="label_asc" {% if airport_sort == "label_asc" %}selected{% endif %}>Airport Name (A-Z)</option>
+                    <option value="label_desc" {% if airport_sort == "label_desc" %}selected{% endif %}>Airport Name (Z-A)</option>
+                </select>
+
+                <label for="airportItemsPerPage" class="ml-4">Show:</label>
+                <select id="airportItemsPerPage" name="airport_items_per_page" class="form-control custom-select ml-2" onchange="this.form.submit()">
+                    <option value="10" {% if airport_items_per_page == 10 %}selected{% endif %}>10</option>
+                    <option value="25" {% if airport_items_per_page == 25 %}selected{% endif %}>25</option>
+                    <option value="50" {% if airport_items_per_page == 50 %}selected{% endif %}>50</option>
+                </select>
+            </form>
+
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Airport Name</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for airport in airports_page %}
+                        <tr>
+                            <td>
+                                <a href="{% url 'airport_details' airport_id=airport.id %}" class="link-hover-effect-airports">
+                                    {{ airport.label }}
+                                </a>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+
+            <!-- Pagination -->
+            <div class="pagination d-flex justify-content-between align-items-center">
+                <div>
+                    {% if airports_page.has_previous %}
+                        <a href="?airport_page={{ airports_page.previous_page_number }}&airport_sort={{ airport_sort }}&airport_items_per_page={{ airport_items_per_page }}" class="btn btn-outline-primary">
+                            &laquo; Previous
+                        </a>
+                    {% endif %}
+                </div>
+                <span>Page {{ airports_page.number }} of {{ airports_page.paginator.num_pages }}</span>
+                <div>
+                    {% if airports_page.has_next %}
+                        <a href="?airport_page={{ airports_page.next_page_number }}&airport_sort={{ airport_sort }}&airport_items_per_page={{ airport_items_per_page }}" class="btn btn-outline-primary">
+                            Next &raquo;
+                        </a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <!-- Regions Tab -->
+        <div class="tab-pane fade" id="regions" role="tabpanel" aria-labelledby="regions-tab">
+            <h4>Regions</h4>
+            <form method="get" class="form-inline mb-4">
+                <label for="regionSort">Sort by:</label>
+                <select id="regionSort" name="region_sort" class="form-control custom-select mr-2" onchange="this.form.submit()">
+                    <option value="label_asc" {% if region_sort == "label_asc" %}selected{% endif %}>Region Name (A-Z)</option>
+                    <option value="label_desc" {% if region_sort == "label_desc" %}selected{% endif %}>Region Name (Z-A)</option>
+                </select>
+
+                <label for="regionItemsPerPage" class="ml-4">Show:</label>
+                <select id="regionItemsPerPage" name="region_items_per_page" class="form-control custom-select ml-2" onchange="this.form.submit()">
+                    <option value="10" {% if region_items_per_page == 10 %}selected{% endif %}>10</option>
+                    <option value="25" {% if region_items_per_page == 25 %}selected{% endif %}>25</option>
+                    <option value="50" {% if region_items_per_page == 50 %}selected{% endif %}>50</option>
+                </select>
+            </form>
+
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Region Name</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for region in regions_page %}
+                        <tr>
+                            <td>
+                                <a href="{% url 'region_details' region_id=region.id %}" class="link-hover-effect-airports">
+                                    {{ region.label }}
+                                </a>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+
+            <!-- Pagination -->
+            <div class="pagination d-flex justify-content-between align-items-center">
+                <div>
+                    {% if regions_page.has_previous %}
+                        <a href="?region_page={{ regions_page.previous_page_number }}&region_sort={{ region_sort }}&region_items_per_page={{ region_items_per_page }}" class="btn btn-outline-primary">
+                            &laquo; Previous
+                        </a>
+                    {% endif %}
+                </div>
+                <span>Page {{ regions_page.number }} of {{ regions_page.paginator.num_pages }}</span>
+                <div>
+                    {% if regions_page.has_next %}
+                        <a href="?region_page={{ regions_page.next_page_number }}&region_sort={{ region_sort }}&region_items_per_page={{ region_items_per_page }}" class="btn btn-outline-primary">
+                            Next &raquo;
+                        </a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Save the active tab to localStorage
+    document.addEventListener('DOMContentLoaded', function () {
+        // Check if there's a saved tab in localStorage
+        const savedTab = localStorage.getItem('activeTab');
+        if (savedTab) {
+            const activeTab = document.querySelector(`a[href="${savedTab}"]`); // Corrected querySelector
+            if (activeTab) {
+                activeTab.click();
+            }
+        }
+
+        // Save the currently selected tab to localStorage on click
+        const tabs = document.querySelectorAll('#countryTabs .nav-link');
+        tabs.forEach(tab => {
+            tab.addEventListener('click', function () {
+                localStorage.setItem('activeTab', tab.getAttribute('href'));
+            });
+        });
+    });
+</script>
+
+{% endblock %}

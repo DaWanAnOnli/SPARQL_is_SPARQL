@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2 id="a">Search Results</h2>
+    <p id="b">You searched for: <strong>{{ query }}</strong></p>
+
+    <!-- Tab Navigation -->
+    <div id="searchNoQuery"></div>
+    <ul class="nav nav-tabs" id="resultsTabs" role="tablist"></ul>
+
+    <!-- Tab Content -->
+    <div class="tab-content mt-4" id="resultsTabContent"></div>
+</div>
+{% endblock %}

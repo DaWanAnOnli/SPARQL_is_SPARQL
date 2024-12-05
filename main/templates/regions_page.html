@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2>Region Details: {{ region_data.name }}</h2>
+
+    <!-- Grouped Cards -->
+    {% for group in region_info_groups %}
+        <div class="general-info">
+            <div class="category-header">{{ group.category }}</div>
+            {% for field, value, icon in group.items %}
+                <div class="info-item">
+                    <div class="icon">{{ icon }}</div>
+                    <div class="text">
+                        <div class="label">{{ field }}</div>
+                        <div class="value">
+                            {% if value|safe %}
+                                {{ value|safe }}
+                            {% else %}
+                                {{ value }}
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% endfor %}
+</div>
+{% endblock %}
